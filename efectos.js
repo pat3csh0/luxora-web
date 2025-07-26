@@ -1,6 +1,5 @@
 /* TÍTULO PRINCIPAL CON EFECTO TYPED.JS PARA BORRADO Y ESCRITURA */
 
-<script>
   // Esperamos 200 ms después de cargar la página para garantizar
   // que GHL ya montó el bloque Custom HTML con tu <span>
   setTimeout(function() {
@@ -22,12 +21,10 @@
       smartBackspace: true
     });
   }, 200);
-</script>
 
 
 /* ANIMACIONES CUADRÍCULA FUNCIONALIDADES */
 
-<script>
   gsap.registerPlugin(ScrollTrigger);
 
   // Estado inicial (opcional si ya está en CSS)
@@ -80,4 +77,3 @@
     once: true
   });
   
-</script>
