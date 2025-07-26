@@ -52,9 +52,17 @@
     line-height: 1.4 !important;
 }
 
+/* SUBHEADLINE-FUNCTIONS */
+.sub-headline-functions h2 {
+    color: #FFFFFF !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+}
+
 /* PÁRRAFOS */
 .paragraph-style {
-    color: #FFFFFF !important;
+    color: #FFFF00 !important;
     font-size: 16px !important;
     font-weight: 400 !important;
     line-height: 1.6 !important;
@@ -213,4 +221,3 @@
         grid-column: 1 / -1 !important;
     }
 }
-
