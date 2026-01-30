@@ -1,12 +1,4 @@
 /* =========================================================
-   Luxora UI - Encapsulado
-   - Añade una clase raíz para que el CSS solo afecte cuando
-     esta librería está cargada.
-   ========================================================= */
-document.documentElement.classList.add('lx-ui');
-
-
-/* =========================================================
    Luxora Lightbox + Swipe + Addons (preload / counter / center thumbs)
    - Requisitos HTML:
      - Contenedor de galería con clase: .lx-gallery-main
