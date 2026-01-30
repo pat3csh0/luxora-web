@@ -1,0 +1,421 @@
+/* ======================================================================
+   LUXORA UI (ENCAPSULADO)
+   - Todo cuelga de html.lx-ui para no romper otras webs / otros headers
+   - Incluye:
+     1) Hero / header helpers (solo si usas esas clases)
+     2) Menú móvil GHL nav-menu-v2 (overlay + X centrada)
+     3) Galería (grid) + Lightbox
+   ====================================================================== */
+
+
+/* ======================================================================
+   0) VARIABLES (solo afectan si está lx-ui)
+   ====================================================================== */
+html.lx-ui {
+  --menu-overlay: rgba(0,0,0,.88);
+  --menu-blur: 6px;
+
+  /* padding del panel móvil */
+  --menu-pad-top: 110px;
+  --menu-pad-x: 18px;
+  --menu-pad-bottom: 40px;
+
+  /* close button */
+  --menu-close-size: 48px;     /* círculo */
+  --menu-close-icon: 26px;     /* svg */
+  --menu-close-bg: rgba(255,255,255,.14);
+
+  /* z-index “alto pero razonable” */
+  --menu-z: 1000000;
+  --menu-z-close: 1000001;
+}
+
+
+/* ======================================================================
+   1) HERO / SECCIÓN INICIO (solo si existen tus clases)
+   ====================================================================== */
+html.lx-ui .seccion-inicio{
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* escritorio */
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 767px){
+  html.lx-ui .seccion-inicio h1,
+  html.lx-ui .seccion-inicio h2,
+  html.lx-ui .seccion-inicio p{
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+}
+
+/* Header transparente (si lo usas) */
+html.lx-ui .menu-transparente{
+  background: transparent !important;
+  position: relative;
+  z-index: 999;
+}
+html.lx-ui .seccion-inferior{
+  position: relative;
+  z-index: 1;
+}
+
+/* Logo no se deforma */
+html.lx-ui .menu-principal img,
+html.lx-ui .menu-transparente img{
+  width: auto !important;
+  object-fit: contain !important;
+  display: block;
+}
+html.lx-ui .menu-transparente img{ height: 150px; }
+
+@media (max-width: 767px){
+  html.lx-ui :root{ --header-h: 200px; } /* si lo usas en tu layout */
+
+  html.lx-ui .seccion-inicio{
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding-top: var(--header-h) !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+    padding-bottom: 40px !important;
+    box-sizing: border-box;
+  }
+
+  html.lx-ui .menu-transparente img{
+    height: 100px !important;
+    width: auto !important;
+  }
+
+  html.lx-ui .menu-transparente{
+    padding-left: 7% !important;
+    padding-right: 7% !important;
+    box-sizing: border-box;
+  }
+}
+
+
+/* ======================================================================
+   2) MENÚ MÓVIL (GHL nav-menu-v2)
+   OBJETIVO:
+   - El “panel” real es: ul.nav-menu-ul.nav-menu-desktop (en móvil)
+   - Overlay oscuro + blur
+   - Links blancos
+   - X centrada dentro del círculo
+   - NO romper desplegables (mega-menu)
+   - NO ocultar hamburguesa nunca (fix anti “se oculta”)
+   ====================================================================== */
+@media (max-width: 767px){
+
+  /* ------------------------------------------------------------
+     2.1) Anti-bug: que el botón hamburguesa NO desaparezca
+     (Hay webs donde otros estilos lo ponen a display:none o similar)
+     ------------------------------------------------------------ */
+  html.lx-ui :where(.nav-menu-mobile){
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: calc(var(--menu-z) + 2) !important; /* por encima del hero */
+  }
+
+  /* Si el botón real lleva esta estructura típica */
+  html.lx-ui :where(.nav-menu-mobile, .nav-menu-mobile *) {
+    filter: none !important;
+  }
+
+  /* ------------------------------------------------------------
+     2.2) Panel fullscreen: UL “desktop” que en móvil se usa como popup
+     ------------------------------------------------------------ */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop{
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    z-index: var(--menu-z) !important;
+
+    background: var(--menu-overlay) !important;
+    -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
+    backdrop-filter: blur(var(--menu-blur)) !important;
+
+    color: #fff !important;
+    overflow-y: auto !important;
+
+    padding-top: var(--menu-pad-top) !important;
+    padding-left: var(--menu-pad-x) !important;
+    padding-right: var(--menu-pad-x) !important;
+    padding-bottom: var(--menu-pad-bottom) !important;
+  }
+
+  /* Texto/links/iconos en blanco (incl. submenús) */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop,
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop a,
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop span,
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop li{
+    color: #fff !important;
+  }
+
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop svg,
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop i{
+    color: #fff !important;
+    fill: #fff !important;
+  }
+
+  /* Evita fondos claros raros por item */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop li{
+    background: transparent !important;
+  }
+
+  /* Separación items */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop > li{
+    padding: 10px 0 !important;
+  }
+
+  /* ------------------------------------------------------------
+     2.3) Desplegables / mega-menu
+     IMPORTANTE: NO tocamos display, solo legibilidad
+     ------------------------------------------------------------ */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop .mega-menu,
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop .mega-menu *{
+    color: #fff !important;
+  }
+
+  /* ------------------------------------------------------------
+     2.4) Botón X: centrado perfecto
+     DOM típico: li.x-icon > div.flex.justify-end.items-center... > svg
+     Problema: justify-end + padding/márgenes => svg “pegado”
+     Solución: hacemos el wrapper cuadrado y centramos con grid/flex.
+     ------------------------------------------------------------ */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop > li.x-icon{
+    position: fixed !important;
+    top: 18px !important;
+    right: 18px !important;
+    z-index: var(--menu-z-close) !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    height: auto !important;
+
+    /* anulamos efectos del layout original */
+    background: transparent !important;
+  }
+
+  /* wrapper clickable */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div{
+    width: var(--menu-close-size) !important;
+    height: var(--menu-close-size) !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    border-radius: 999px !important;
+    background: var(--menu-close-bg) !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 0 !important;
+  }
+
+  /* el SVG */
+  html.lx-ui ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg{
+    width: var(--menu-close-icon) !important;
+    height: var(--menu-close-icon) !important;
+
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+
+    transform: none !important;
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+  }
+}
+
+@media (max-width: 480px){
+  html.lx-ui{
+    --menu-pad-top: 105px;
+    --menu-close-size: 46px;
+    --menu-close-icon: 26px;
+  }
+}
+
+
+/* ======================================================================
+   3) GALERÍA (solo si existe .lx-gallery-main)
+   ====================================================================== */
+html.lx-ui .lx-gallery-main .photo-video-gallery-grid{
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 10px !important;
+  align-items: stretch;
+}
+
+html.lx-ui .lx-gallery-main .photo-video-gallery-grid-item{
+  overflow: hidden;
+  border-radius: 12px;
+  position: relative;
+}
+
+/* 1ª: hero a todo el ancho, 2 filas */
+html.lx-ui .lx-gallery-main .photo-video-gallery-grid-item:first-child{
+  grid-column: 1 / -1 !important;
+  grid-row: span 2 !important;
+  aspect-ratio: 21 / 9;
+  min-height: 420px;
+}
+
+html.lx-ui .lx-gallery-main .photo-video-gallery-grid-item:first-child img{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* resto cuadradas */
+html.lx-ui .lx-gallery-main .photo-video-gallery-grid-item:not(:first-child){
+  aspect-ratio: 1 / 1;
+}
+html.lx-ui .lx-gallery-main .photo-video-gallery-grid-item:not(:first-child) img{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+@media (max-width: 768px){
+  html.lx-ui .lx-gallery-main .photo-video-gallery-grid{
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  html.lx-ui .lx-gallery-main .photo-video-gallery-grid-item:first-child{
+    grid-row: span 1 !important;
+    aspect-ratio: 4 / 3;
+    min-height: 240px;
+  }
+}
+
+
+/* ======================================================================
+   4) LIGHTBOX (usa #lxLightbox porque lo crea TU JS con ese id)
+   - Aquí el ID es correcto porque es “tu componente”, no el theme.
+   ====================================================================== */
+html.lx-ui #lxLightbox{
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(0,0,0,.9);
+
+  /* anti-bloqueo */
+  display: none;
+  pointer-events: none;
+}
+
+html.lx-ui #lxLightbox.lx-on{
+  display: block;
+  pointer-events: auto;
+}
+
+html.lx-ui #lxLightbox .lx-stage{
+  position: absolute;
+  inset: 0;
+}
+
+html.lx-ui #lxLightbox .lx-mainimg{
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 92vw;
+  max-height: 80vh;
+  border-radius: 22px;
+  display: block;
+}
+
+html.lx-ui #lxLightbox .lx-btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  line-height: 1;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 14px;
+  opacity: .9;
+  z-index: 2;
+  user-select: none;
+}
+html.lx-ui #lxLightbox .lx-prev{ left: 12px; }
+html.lx-ui #lxLightbox .lx-next{ right: 12px; }
+
+html.lx-ui #lxLightbox .lx-close{
+  top: 18px;
+  right: 18px;
+  transform: none;
+  font-size: 34px;
+}
+html.lx-ui #lxLightbox .lx-btn:hover{ opacity: 1; }
+
+html.lx-ui #lxLightbox .lx-thumbs{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  padding: 0 16px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  justify-content: center;
+  z-index: 2;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.lx-ui #lxLightbox .lx-thumbs img{
+  width: 64px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 10px;
+  opacity: .65;
+  cursor: pointer;
+  border: 2px solid transparent;
+  flex: 0 0 auto;
+}
+html.lx-ui #lxLightbox .lx-thumbs img.lx-active{
+  opacity: 1;
+  border-color: #fff;
+}
+
+@media (max-width: 768px){
+  html.lx-ui #lxLightbox .lx-mainimg{ max-height: 74vh; }
+  html.lx-ui #lxLightbox .lx-thumbs img{ width: 56px; height: 40px; }
+  html.lx-ui #lxLightbox .lx-btn{ padding: 18px; }
+}
+
+html.lx-ui #lxLightbox .lx-counter{
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  z-index: 3;
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: .4px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  user-select: none;
+}
