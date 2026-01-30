@@ -1,0 +1,470 @@
+/* =========================================================
+   HERO / SECCIÓN INICIO (tal cual lo tenías)
+   ========================================================= */
+.seccion-inicio {
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+ /* escritorio */
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width:767px) {
+    .seccion-inicio h1,
+  .seccion-inicio h2,
+  .seccion-inicio p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+}
+
+/* =========================================================
+   MENÚ TRANSPARENTE / Z-INDEX
+   ========================================================= */
+.menu-transparente {
+    background: transparent !important;
+    position: relative;
+    z-index: 999;
+}
+
+.seccion-inferior {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   LOGO MENÚ (evitar deformación)
+   ========================================================= */
+.menu-principal img,
+.menu-transparente img {
+    width: auto !important;
+    object-fit: contain !important;
+    display: block;
+}
+
+.menu-transparente img {
+    height: 150px;
+}
+
+@media (max-width:767px) {
+    :root {
+        --header-h: 200px;
+    }
+
+    .seccion-inicio {
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow: visible !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding-top: var(--header-h) !important;
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+        padding-bottom: 40px !important;
+        box-sizing: border-box;
+    }
+
+    .seccion-inicio h1,
+  .seccion-inicio h2 {
+        margin-top: 0 !important;
+    }
+
+    .seccion-inicio img {
+        max-width: 100% !important;
+        height: auto !important;
+        display: block;
+    }
+
+    .seccion-inicio .row,
+  .seccion-inicio .col,
+  .seccion-inicio [class*="column"] {
+        overflow: visible !important;
+    }
+
+    .menu-transparente img {
+        height: 100px !important;
+        width: auto !important;
+    }
+
+    .menu-transparente {
+        padding-left: 7% !important;
+        padding-right: 7% !important;
+        box-sizing: border-box;
+    }
+}
+
+/* =========================================================
+   VARIABLES (overlay + icono cerrar)
+   ========================================================= */
+:root {
+    --menu-overlay: rgba(0,0,0,.88);
+    --menu-blur: 6px;
+    --menu-pad-top: 110px;
+    --menu-pad-x: 18px;
+    --menu-pad-bottom: 40px;
+    --menu-close-size: 48px;
+     /* círculo */
+    --menu-close-icon: 26px;
+     /* svg */
+    --menu-close-bg: rgba(255,255,255,.14);
+}
+
+/* =========================================================
+   FIX MENÚ MÓVIL (GHL nav-menu-v2)
+   - El panel fullscreen real es: ul.nav-menu-ul.nav-menu-desktop
+   - Overlay oscuro + blur
+   - Links en blanco
+   - NO tocamos display de .mega-menu (para no romper desplegables)
+   - X (close) centrada dentro del círculo
+   ========================================================= */
+@media (max-width:767px) {
+
+  /* 1) Panel fullscreen */
+    ul.nav-menu-ul.nav-menu-desktop {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100dvh !important;
+        z-index: 1000000 !important;
+        background: var(--menu-overlay) !important;
+        -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
+        backdrop-filter: blur(var(--menu-blur)) !important;
+        color: #fff !important;
+        overflow-y: auto !important;
+        padding-top: var(--menu-pad-top) !important;
+        padding-left: var(--menu-pad-x) !important;
+        padding-right: var(--menu-pad-x) !important;
+        padding-bottom: var(--menu-pad-bottom) !important;
+    }
+
+  /* 2) Texto/links/iconos siempre blancos */
+    ul.nav-menu-ul.nav-menu-desktop,
+  ul.nav-menu-ul.nav-menu-desktop a,
+  ul.nav-menu-ul.nav-menu-desktop span,
+  ul.nav-menu-ul.nav-menu-desktop li {
+        color: #fff !important;
+    }
+
+    ul.nav-menu-ul.nav-menu-desktop svg,
+  ul.nav-menu-ul.nav-menu-desktop i {
+        color: #fff !important;
+        fill: #fff !important;
+    }
+
+  /* 3) Evita que algún theme meta fondos claros en items */
+    ul.nav-menu-ul.nav-menu-desktop li,
+  ul.nav-menu-ul.nav-menu-desktop li * {
+        background: transparent !important;
+    }
+
+  /* 4) Separación bonita entre items */
+    ul.nav-menu-ul.nav-menu-desktop > li {
+        padding: 10px 0 !important;
+    }
+
+  /* 5) Submenús/mega-menu: NO forzamos display. Solo aseguramos legibilidad. */
+    ul.nav-menu-ul.nav-menu-desktop .mega-menu,
+  ul.nav-menu-ul.nav-menu-desktop .mega-menu * {
+        color: #fff !important;
+    }
+
+  /* =======================================================
+     X / BOTÓN CERRAR (centrado perfecto)
+     - En tu DOM: li.x-icon > div.flex.justify-end.items-center... > svg
+     - El “descuadre” viene por justify-end + layout del wrapper.
+     - Solución: fijamos el wrapper, lo hacemos cuadrado y centramos contenido.
+     ======================================================= */
+
+  /* El LI que contiene la X: lo sacamos del flujo */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon {
+        position: fixed !important;
+        top: 18px !important;
+        right: 18px !important;
+        z-index: 1000001 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+  /* Wrapper clickable (tu div.flex.justify-end...) */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div {
+        width: var(--menu-close-size) !important;
+        height: var(--menu-close-size) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 999px !important;
+        background: var(--menu-close-bg) !important;
+    /* importante para “centrado visual” */
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: 0 !important;
+    }
+
+  /* Si hubiera un wrapper interno extra */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div > * {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: 0 !important;
+    }
+
+  /* El SVG de la X */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg[aria-label="close"],
+  ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg {
+        width: var(--menu-close-icon) !important;
+        height: var(--menu-close-icon) !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 0 !important;
+        transform: none !important;
+    }
+
+  /* Por si algún estilo lo “empuja” horizontalmente */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg {
+        position: relative !important;
+        left: 0 !important;
+        right: auto !important;
+        top: 0 !important;
+    }
+}
+
+/* Ajustes opcionales por breakpoint */
+@media (max-width:480px) {
+    :root {
+        --menu-pad-top: 105px;
+        --menu-close-size: 46px;
+        --menu-close-icon: 26px;
+    }
+}
+
+
+
+/* =========================================================
+   1) GALERÍA: GRID + HERO (1ª foto a todo el ancho y 2 filas)
+   Requiere: clase en el elemento padre = .lx-gallery-main
+   ========================================================= */
+
+/* Contenedor grid */
+.lx-gallery-main .photo-video-gallery-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px !important;
+    align-items: stretch;
+}
+
+/* Item */
+.lx-gallery-main .photo-video-gallery-grid-item {
+    overflow: hidden;
+    border-radius: 12px;
+    position: relative;
+}
+
+/* 1ª imagen: HERO a todo el ancho + ocupa 2 filas */
+.lx-gallery-main .photo-video-gallery-grid-item:first-child {
+    grid-column: 1 / -1 !important;
+    grid-row: span 2 !important;
+      /* ✅ 2 filas */
+    aspect-ratio: 21 / 9;
+             /* ✅ menos recorte horizontal (ajusta si quieres) */
+    min-height: 420px;
+                /* ✅ asegura altura real (evita que se quede en 1 fila visualmente) */
+}
+
+/* Imagen dentro (hero) */
+.lx-gallery-main .photo-video-gallery-grid-item:first-child img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+     /* cambia a contain si quieres verla entera */
+    display: block !important;
+}
+
+/* Resto de imágenes: cuadradas */
+.lx-gallery-main .photo-video-gallery-grid-item:not(:first-child) {
+    aspect-ratio: 1 / 1;
+}
+
+/* Imagen dentro (resto) */
+.lx-gallery-main .photo-video-gallery-grid-item:not(:first-child) img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lx-gallery-main .photo-video-gallery-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+  /* En móvil, que no sea enorme */
+    .lx-gallery-main .photo-video-gallery-grid-item:first-child {
+        grid-row: span 1 !important;
+        aspect-ratio: 4 / 3;
+        min-height: 240px;
+    }
+}
+
+
+/* =========================================================
+   2) LIGHTBOX / FULLSCREEN + MINIATURAS (ANTI BLOQUEO)
+   ========================================================= */
+
+/* Overlay: por defecto NO existe para clicks */
+#lxLightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(0,0,0,.9);
+    display: none;
+         /* clave anti bloqueo */
+    pointer-events: none;
+  /* clave anti bloqueo */
+}
+
+/* Abierto */
+#lxLightbox.lx-on {
+    display: block;
+    pointer-events: auto;
+}
+
+/* Stage (zona interna) */
+#lxLightbox .lx-stage {
+    position: absolute;
+    inset: 0;
+}
+
+/* Imagen principal */
+#lxLightbox .lx-mainimg {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    max-width: 92vw;
+    max-height: 80vh;
+    border-radius: 22px;
+    display: block;
+}
+
+/* Botones */
+#lxLightbox .lx-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    line-height: 1;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    padding: 14px;
+    opacity: .9;
+    z-index: 2;
+    user-select: none;
+}
+
+#lxLightbox .lx-prev {
+    left: 12px;
+}
+
+#lxLightbox .lx-next {
+    right: 12px;
+}
+
+#lxLightbox .lx-close {
+    top: 18px;
+    right: 18px;
+    transform: none;
+    font-size: 34px;
+}
+
+#lxLightbox .lx-btn:hover {
+    opacity: 1;
+}
+
+/* Miniaturas */
+#lxLightbox .lx-thumbs {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    padding: 0 16px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    justify-content: center;
+    z-index: 2;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* scrollbar discreto (opcional) */
+#lxLightbox .lx-thumbs::-webkit-scrollbar {
+    height: 8px;
+}
+
+#lxLightbox .lx-thumbs::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.25);
+    border-radius: 20px;
+}
+
+#lxLightbox .lx-thumbs img {
+    width: 64px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 10px;
+    opacity: .65;
+    cursor: pointer;
+    border: 2px solid transparent;
+    flex: 0 0 auto;
+}
+
+#lxLightbox .lx-thumbs img.lx-active {
+    opacity: 1;
+    border-color: #fff;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #lxLightbox .lx-mainimg {
+        max-height: 74vh;
+    }
+
+    #lxLightbox .lx-thumbs img {
+        width: 56px;
+        height: 40px;
+    }
+
+    #lxLightbox .lx-btn {
+        padding: 18px;
+    }
+}
+
+/* Contador x/N en fullscreen */
+#lxLightbox .lx-counter {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    z-index: 3;
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: .4px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    user-select: none;
+}
