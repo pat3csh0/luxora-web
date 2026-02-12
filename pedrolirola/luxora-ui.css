@@ -468,8 +468,10 @@
     -webkit-backdrop-filter: blur(6px);
     user-select: none;
 }
-/* Forzar items del submenu en blanco */
-.submenu-item,
-.submenu-item *{
-  color:#fff !important;
+/* Blanco SOLO dentro del overlay móvil */
+@media (max-width:767px){
+  .submenu-item,
+  .submenu-item *{
+    color:#fff !important;
+  }
 }
