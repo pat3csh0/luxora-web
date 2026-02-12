@@ -479,10 +479,22 @@
 ul.nav-menu-ul.nav-menu-desktop {
     position: fixed !important;
 
-/* Si el menú móvil NO está activo, no mostrar el panel */
+/* =========================================================
+   FIX: en resoluciones móviles el menú NO inicia abierto
+   ========================================================= */
 @media (max-width:767px){
-  body:not(.submenu-mobile-active) ul.nav-menu-ul.nav-menu-desktop{
-    display:none !important;
+
+  /* estado inicial oculto */
+  ul.nav-menu-ul.nav-menu-desktop{
+    opacity:0 !important;
+    pointer-events:none !important;
   }
+
+  /* cuando GHL lo activa */
+  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop{
+    opacity:1 !important;
+    pointer-events:auto !important;
+  }
+
 }
 
