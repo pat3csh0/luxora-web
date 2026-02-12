@@ -129,7 +129,7 @@
         inset: 0 !important;
         width: 100% !important;
         height: 100dvh !important;
-        z-index: 99999 !important;
+        z-index: 1000000 !important;
         background: var(--menu-overlay) !important;
         -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
         backdrop-filter: blur(var(--menu-blur)) !important;
@@ -468,31 +468,8 @@
     -webkit-backdrop-filter: blur(6px);
     user-select: none;
 }
-
-
-/* ULTIMOS CAMBIOS */
 /* Forzar items del submenu en blanco */
 .submenu-item,
 .submenu-item *{
   color:#fff !important;
 }
-ul.nav-menu-ul.nav-menu-desktop {
-    position: fixed !important;
-}
-
-/* =========================================================
-   FIX: en resoluciones móviles el menú NO inicia abierto
-   ========================================================= */
-@media (max-width:767px){
-
-  /* estado inicial oculto */
-  ul.nav-menu-ul.nav-menu-desktop{
-    opacity:0 !important;
-    pointer-events:none !important;
-  }
-
-  /* cuando GHL lo activa */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop{
-    opacity:1 !important;
-    pointer-events:auto !important;
-  }
