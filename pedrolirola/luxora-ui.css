@@ -478,6 +478,7 @@
 }
 ul.nav-menu-ul.nav-menu-desktop {
     position: fixed !important;
+}
 
 /* =========================================================
    FIX: en resoluciones móviles el menú NO inicia abierto
@@ -495,6 +496,3 @@ ul.nav-menu-ul.nav-menu-desktop {
     opacity:1 !important;
     pointer-events:auto !important;
   }
-
-}
-
