@@ -129,7 +129,7 @@
         inset: 0 !important;
         width: 100% !important;
         height: 100dvh !important;
-        z-index: 999 !important;
+        z-index: 99 !important;
         background: var(--menu-overlay) !important;
         -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
         backdrop-filter: blur(var(--menu-blur)) !important;
