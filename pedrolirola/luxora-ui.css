@@ -114,123 +114,64 @@
 }
 
 /* =========================================================
-   FIX MENÚ MÓVIL (GHL nav-menu-v2) - CORREGIDO
-   - NO forzar overlay siempre: solo cuando el menú esté "abierto"
-   - Usamos el flag real del DOM: .submenu-mobile-active
+   FIX MENÚ MÓVIL (GHL nav-menu-v2) - ROBUSTO
+   - Por defecto (cerrado): NO overlay + NO visible
+   - Abierto: overlay fullscreen SOLO con .submenu-mobile-active
    ========================================================= */
 @media (max-width: 767px) {
 
-  /* A) Estado NORMAL (menú cerrado): NO lo conviertas en overlay */
+  /* 0) CERRADO: lo ocultamos para que no aparezca “siempre” */
   ul.nav-menu-ul.nav-menu-desktop{
+    display: none !important;
     position: static !important;
     inset: auto !important;
     width: auto !important;
     height: auto !important;
-    z-index: auto !important;
     background: transparent !important;
-    overflow: visible !important;
     padding: 0 !important;
-    pointer-events: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
   }
 
-  /* B) Estado ABIERTO: solo cuando GHL marca .submenu-mobile-active */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop {
+  /* 1) ABIERTO: overlay real (solo cuando GHL marca activo) */
+  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop{
+    display: block !important;
+
     position: fixed !important;
     inset: 0 !important;
     width: 100% !important;
     height: 100dvh !important;
     z-index: 1000000 !important;
-    background: var(--menu-overlay) !important;
-    -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
-    backdrop-filter: blur(var(--menu-blur)) !important;
+
+    background: var(--menu-overlay, rgba(0,0,0,.88)) !important;
+    -webkit-backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+    backdrop-filter: blur(var(--menu-blur, 6px)) !important;
 
     overflow-y: auto !important;
-    padding-top: var(--menu-pad-top) !important;
-    padding-left: var(--menu-pad-x) !important;
-    padding-right: var(--menu-pad-x) !important;
-    padding-bottom: var(--menu-pad-bottom) !important;
+    padding-top: var(--menu-pad-top, 110px) !important;
+    padding-left: var(--menu-pad-x, 18px) !important;
+    padding-right: var(--menu-pad-x, 18px) !important;
+    padding-bottom: var(--menu-pad-bottom, 36px) !important;
 
-    /* importantísimo para tus items que usan var(--text-color) */
+    /* clave para items que usan var(--text-color) */
     --text-color: #fff !important;
     color: #fff !important;
   }
 
-  /* C) Texto/links/iconos en BLANCO (solo cuando está abierto) */
+  /* 2) Links/items en blanco (incluye Arquitectura/Interiorismo) */
   .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop,
   .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop a,
   .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop span,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li {
-    color: #fff !important;
-  }
-
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop svg,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop i {
-    color: #fff !important;
-    fill: #fff !important;
-  }
-
-  /* D) Submenu items (Arquitectura/Interiorismo): fuerzo selector exacto */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .submenu-item,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .submenu-item * {
-    color: #fff !important;
-  }
-
-  /* E) Evitar fondos claros inyectados */
   .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li * {
-    background: transparent !important;
-  }
-
-  /* F) Separación entre items */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop > li {
-    padding: 10px 0 !important;
-  }
-
-  /* G) Mega-menu legible */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .mega-menu,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .mega-menu * {
+  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .submenu-item,
+  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .submenu-item *{
     color: #fff !important;
   }
 
-  /* =======================================================
-     X / BOTÓN CERRAR (centrado perfecto)
-     - Solo cuando el menú está abierto
-     ======================================================= */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop > li.x-icon {
-    position: fixed !important;
-    top: 18px !important;
-    right: 18px !important;
-    z-index: 1000001 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: auto !important;
-    height: auto !important;
-  }
-
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div {
-    width: var(--menu-close-size) !important;
-    height: var(--menu-close-size) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 999px !important;
-    background: var(--menu-close-bg) !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    line-height: 0 !important;
-  }
-
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg {
-    width: var(--menu-close-icon) !important;
-    height: var(--menu-close-icon) !important;
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 0 !important;
-    transform: none !important;
-    position: relative !important;
-    left: 0 !important;
-    top: 0 !important;
+  /* 3) Evitar fondos claros inyectados por el builder */
+  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li,
+  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li *{
+    background: transparent !important;
   }
 }
 
