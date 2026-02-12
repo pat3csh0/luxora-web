@@ -114,66 +114,140 @@
 }
 
 /* =========================================================
-   FIX MENÚ MÓVIL (GHL nav-menu-v2) - ROBUSTO
-   - Por defecto (cerrado): NO overlay + NO visible
-   - Abierto: overlay fullscreen SOLO con .submenu-mobile-active
+   FIX MENÚ MÓVIL (GHL nav-menu-v2)
+   - El panel fullscreen real es: ul.nav-menu-ul.nav-menu-desktop
+   - Overlay oscuro + blur
+   - Links en blanco
+   - NO tocamos display de .mega-menu (para no romper desplegables)
+   - X (close) centrada dentro del círculo
    ========================================================= */
-@media (max-width: 767px) {
+@media (max-width:767px) {
 
-  /* 0) CERRADO: lo ocultamos para que no aparezca “siempre” */
-  ul.nav-menu-ul.nav-menu-desktop{
-    display: none !important;
-    position: static !important;
-    inset: auto !important;
-    width: auto !important;
-    height: auto !important;
-    background: transparent !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
-  }
+  /* 1) Panel fullscreen */
+    ul.nav-menu-ul.nav-menu-desktop {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100dvh !important;
+        z-index: 1000000 !important;
+        background: var(--menu-overlay) !important;
+        -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
+        backdrop-filter: blur(var(--menu-blur)) !important;
+        color: #fff !important;
+        overflow-y: auto !important;
+        padding-top: var(--menu-pad-top) !important;
+        padding-left: var(--menu-pad-x) !important;
+        padding-right: var(--menu-pad-x) !important;
+        padding-bottom: var(--menu-pad-bottom) !important;
+    }
 
-  /* 1) ABIERTO: overlay real (solo cuando GHL marca activo) */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop{
-    display: block !important;
+  /* 2) Texto/links/iconos siempre blancos */
+    ul.nav-menu-ul.nav-menu-desktop,
+  ul.nav-menu-ul.nav-menu-desktop a,
+  ul.nav-menu-ul.nav-menu-desktop span,
+  ul.nav-menu-ul.nav-menu-desktop li {
+        color: #fff !important;
+    }
 
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100dvh !important;
-    z-index: 1000000 !important;
+    ul.nav-menu-ul.nav-menu-desktop svg,
+  ul.nav-menu-ul.nav-menu-desktop i {
+        color: #fff !important;
+        fill: #fff !important;
+    }
 
-    background: var(--menu-overlay, rgba(0,0,0,.88)) !important;
-    -webkit-backdrop-filter: blur(var(--menu-blur, 6px)) !important;
-    backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+  /* 3) Evita que algún theme meta fondos claros en items */
+    ul.nav-menu-ul.nav-menu-desktop li,
+  ul.nav-menu-ul.nav-menu-desktop li * {
+        background: transparent !important;
+    }
 
-    overflow-y: auto !important;
-    padding-top: var(--menu-pad-top, 110px) !important;
-    padding-left: var(--menu-pad-x, 18px) !important;
-    padding-right: var(--menu-pad-x, 18px) !important;
-    padding-bottom: var(--menu-pad-bottom, 36px) !important;
+  /* 4) Separación bonita entre items */
+    ul.nav-menu-ul.nav-menu-desktop > li {
+        padding: 10px 0 !important;
+    }
 
-    /* clave para items que usan var(--text-color) */
-    --text-color: #fff !important;
-    color: #fff !important;
-  }
+  /* 5) Submenús/mega-menu: NO forzamos display. Solo aseguramos legibilidad. */
+    ul.nav-menu-ul.nav-menu-desktop .mega-menu,
+  ul.nav-menu-ul.nav-menu-desktop .mega-menu * {
+        color: #fff !important;
+    }
 
-  /* 2) Links/items en blanco (incluye Arquitectura/Interiorismo) */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop a,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop span,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .submenu-item,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop .submenu-item *{
-    color: #fff !important;
-  }
+  /* =======================================================
+     X / BOTÓN CERRAR (centrado perfecto)
+     - En tu DOM: li.x-icon > div.flex.justify-end.items-center... > svg
+     - El “descuadre” viene por justify-end + layout del wrapper.
+     - Solución: fijamos el wrapper, lo hacemos cuadrado y centramos contenido.
+     ======================================================= */
 
-  /* 3) Evitar fondos claros inyectados por el builder */
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li,
-  .submenu-mobile-active ul.nav-menu-ul.nav-menu-desktop li *{
-    background: transparent !important;
-  }
+  /* El LI que contiene la X: lo sacamos del flujo */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon {
+        position: fixed !important;
+        top: 18px !important;
+        right: 18px !important;
+        z-index: 1000001 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+  /* Wrapper clickable (tu div.flex.justify-end...) */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div {
+        width: var(--menu-close-size) !important;
+        height: var(--menu-close-size) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 999px !important;
+        background: var(--menu-close-bg) !important;
+    /* importante para “centrado visual” */
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: 0 !important;
+    }
+
+  /* Si hubiera un wrapper interno extra */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div > * {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: 0 !important;
+    }
+
+  /* El SVG de la X */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg[aria-label="close"],
+  ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg {
+        width: var(--menu-close-icon) !important;
+        height: var(--menu-close-icon) !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 0 !important;
+        transform: none !important;
+    }
+
+  /* Por si algún estilo lo “empuja” horizontalmente */
+    ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg {
+        position: relative !important;
+        left: 0 !important;
+        right: auto !important;
+        top: 0 !important;
+    }
 }
+
+/* Ajustes opcionales por breakpoint */
+@media (max-width:480px) {
+    :root {
+        --menu-pad-top: 105px;
+        --menu-close-size: 46px;
+        --menu-close-icon: 26px;
+    }
+}
+
 
 
 /* =========================================================
@@ -394,3 +468,21 @@
     -webkit-backdrop-filter: blur(6px);
     user-select: none;
 }
+
+
+/* ULTIMOS CAMBIOS */
+/* Forzar items del submenu en blanco */
+.submenu-item,
+.submenu-item *{
+  color:#fff !important;
+}
+ul.nav-menu-ul.nav-menu-desktop {
+    position: fixed !important;
+
+/* Si el menú móvil NO está activo, no mostrar el panel */
+@media (max-width:767px){
+  body:not(.submenu-mobile-active) ul.nav-menu-ul.nav-menu-desktop{
+    display:none !important;
+  }
+}
+
