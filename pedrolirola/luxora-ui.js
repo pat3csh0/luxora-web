@@ -731,3 +731,79 @@
     });
   });
 })();
+/* =========================================================
+   LX BURGER INJECTOR (quirúrgico)
+   - Si NO existe .nav-menu-mobile en esos devices exactos,
+     inyecta un botón hamburguesa y controla body.lx-nav-open
+   ========================================================= */
+(function () {
+  function isProblemDevice() {
+    return window.matchMedia(
+      "(width:1024px) and (height:1366px), (width:912px) and (height:1368px), (width:540px) and (height:720px)"
+    ).matches;
+  }
+
+  function ready(fn) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  ready(function () {
+    if (!isProblemDevice()) return;
+
+    var navRoot = document.querySelector('[id^="nav-menu-v2-"]');
+    if (!navRoot) return;
+
+    // Si ya existe la hamburguesa nativa, no hacemos nada.
+    var nativeBurger = navRoot.querySelector('.nav-menu-mobile[role="button"], .nav-menu-mobile[aria-label*="Toggle menu" i]');
+    if (nativeBurger) return;
+
+    // Evitar duplicados
+    if (navRoot.querySelector(".lx-burger-btn")) return;
+
+    // Contenedor donde posicionar el botón (uno estable)
+    var anchor =
+      navRoot.querySelector(".mega-menu-container") ||
+      navRoot.querySelector(".menu-layout") ||
+      navRoot.querySelector(".child-container-parent") ||
+      navRoot;
+
+    // Asegura que el anchor permita absolute
+    var cs = window.getComputedStyle(anchor);
+    if (cs.position === "static") anchor.style.position = "relative";
+
+    // Crea botón
+    var btn = document.createElement("div");
+    btn.className = "lx-burger-btn";
+    btn.setAttribute("role", "button");
+    btn.setAttribute("tabindex", "0");
+    btn.setAttribute("aria-label", "Toggle menu");
+    btn.innerHTML = "<span></span>";
+
+    function setOpen(v) {
+      document.body.classList.toggle("lx-nav-open", !!v);
+    }
+    function isOpen() {
+      return document.body.classList.contains("lx-nav-open");
+    }
+
+    // Estado inicial cerrado (evita “abierto solo”)
+    setOpen(false);
+
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(!isOpen());
+    });
+
+    btn.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(!isOpen());
+      }
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    anchor.appendChild(btn);
+  });
+})();
