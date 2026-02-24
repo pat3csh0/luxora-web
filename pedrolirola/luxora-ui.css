@@ -600,3 +600,45 @@
     color:#fff !important;
   }
 }
+/* =========================================================
+   LX FIX (quirúrgico): forzar el botón hamburguesa REAL de GHL
+   Elemento: .nav-menu-mobile[aria-label="Toggle menu"]
+   SOLO en:
+   - iPad Pro 12.9: 1024x1366
+   - Surface Pro 7: 912x1368
+   - Surface Duo: 540x720
+   ========================================================= */
+@media (width:1024px) and (height:1366px),
+       (width:912px)  and (height:1368px),
+       (width:540px)  and (height:720px) {
+
+  /* 1) Asegura que el "bloque móvil" del menú exista/sea visible */
+  [id^="nav-menu-v2-"] .cart-search-mobile,
+  [id^="nav-menu-v2-"] ul.cart-search-mobile{
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* 2) FORZAR visible el botón hamburguesa real */
+  [id^="nav-menu-v2-"] .nav-menu-mobile[role="button"],
+  [id^="nav-menu-v2-"] .nav-menu-mobile[aria-label*="Toggle menu" i]{
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* 3) Por si el icono interno está colapsado */
+  [id^="nav-menu-v2-"] .nav-menu-mobile span{
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* 4) Menú overlay: cerrado por defecto (lo abre body.lx-nav-open) */
+  body:not(.lx-nav-open) ul.nav-menu-ul.nav-menu-desktop{
+    display: none !important;
+  }
+}
