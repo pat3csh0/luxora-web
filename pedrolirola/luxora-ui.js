@@ -657,3 +657,77 @@
     mo.observe(document.documentElement, { childList: true, subtree: true });
   });
 })();
+
+
+/* =========================================================
+   LX FIX NAV (quirúrgico): toggle desde .nav-menu-mobile
+   SOLO en 1024x1366 / 912x1368 / 540x720
+   ========================================================= */
+(function () {
+  function matchesProblemDevices() {
+    return window.matchMedia(
+      "(width:1024px) and (height:1366px), (width:912px) and (height:1368px), (width:540px) and (height:720px)"
+    ).matches;
+  }
+
+  function ready(fn) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  ready(function () {
+    if (!matchesProblemDevices()) return;
+
+    var body = document.body;
+    var desktopUL = document.querySelector("ul.nav-menu-ul.nav-menu-desktop");
+    if (!desktopUL) return;
+
+    function setOpen(v) {
+      body.classList.toggle("lx-nav-open", !!v);
+    }
+    function isOpen() {
+      return body.classList.contains("lx-nav-open");
+    }
+
+    // Estado inicial: siempre cerrado (evita Duo abierto “solo”)
+    setOpen(false);
+
+    document.addEventListener(
+      "click",
+      function (e) {
+        var t = e.target;
+
+        // 1) Toggle: el botón hamburguesa real
+        var burger = t.closest && t.closest('.nav-menu-mobile[role="button"], .nav-menu-mobile[aria-label*="Toggle menu" i]');
+        if (burger) {
+          setOpen(!isOpen());
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+
+        // 2) Si está abierto, cerrar con la X
+        if (isOpen()) {
+          if (t.closest && t.closest("li.x-icon")) {
+            setOpen(false);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          // 3) Cerrar al clicar un link del menú
+          var linkInside = t.closest && t.closest("ul.nav-menu-ul.nav-menu-desktop a");
+          if (linkInside) {
+            setOpen(false);
+            return;
+          }
+        }
+      },
+      true
+    );
+
+    document.addEventListener("keydown", function (e) {
+      if (isOpen() && e.key === "Escape") setOpen(false);
+    });
+  });
+})();
