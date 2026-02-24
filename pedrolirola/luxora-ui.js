@@ -533,3 +533,127 @@
     updateUI();
   })();
 })();
+
+
+/* =========================================================
+   LX FIX NAV (quirúrgico)
+   - iPad Pro 12.9: 1024x1366
+   - Surface Pro 7: 912x1368
+   - Surface Duo: 540x720
+   Controla apertura/cierre usando body.lx-nav-open
+   ========================================================= */
+(function () {
+  function matchesProblemDevices() {
+    return window.matchMedia(
+      "(width:1024px) and (height:1366px), (width:912px) and (height:1368px), (width:540px) and (height:720px)"
+    ).matches;
+  }
+
+  function ready(fn) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  ready(function () {
+    if (!matchesProblemDevices()) return;
+
+    var body = document.body;
+    var menuUL = document.querySelector("ul.nav-menu-ul.nav-menu-desktop");
+    if (!menuUL) return;
+
+    function setOpen(v) {
+      body.classList.toggle("lx-nav-open", !!v);
+    }
+    function isOpen() {
+      return body.classList.contains("lx-nav-open");
+    }
+
+    // Estado inicial SIEMPRE cerrado (evita Duo "abierto por defecto")
+    setOpen(false);
+
+    // Helpers: detectar triggers de abrir menú (hamburguesa)
+    function isMenuToggle(el) {
+      if (!el) return false;
+
+      // Por aria-label (seguro en muchos themes)
+      var al = (el.getAttribute && el.getAttribute("aria-label")) || "";
+      al = al.toLowerCase();
+      if (al.includes("menu") || al.includes("menú") || al.includes("navigation") || al.includes("naveg")) return true;
+
+      // Por clases típicas
+      var cls = (el.className || "").toString().toLowerCase();
+      if (cls.includes("hamburger") || cls.includes("menu-toggle") || cls.includes("nav-toggle") || cls.includes("mobile-menu")) return true;
+
+      return false;
+    }
+
+    function isCloseEl(el) {
+      if (!el) return false;
+      // Tu X es li.x-icon
+      if (el.closest && el.closest("li.x-icon")) return true;
+
+      var al = (el.getAttribute && el.getAttribute("aria-label")) || "";
+      al = al.toLowerCase();
+      if (al.includes("close") || al.includes("cerrar")) return true;
+
+      return false;
+    }
+
+    // Clicks globales (captura)
+    document.addEventListener(
+      "click",
+      function (e) {
+        var t = e.target;
+
+        // Si toca el toggle (hamburguesa/icono menú)
+        var toggleCandidate = t.closest
+          ? t.closest('[aria-label], [class*="hamburger"], [class*="menu"], button, a, div')
+          : t;
+
+        if (isMenuToggle(toggleCandidate)) {
+          // Toggle abrir/cerrar
+          setOpen(!isOpen());
+          return;
+        }
+
+        // Si está abierto:
+        if (isOpen()) {
+          // Cerrar al tocar la X
+          if (isCloseEl(t)) {
+            setOpen(false);
+            return;
+          }
+
+          // Cerrar al tocar cualquier link dentro del menú
+          var linkInside = t.closest && t.closest("ul.nav-menu-ul.nav-menu-desktop a");
+          if (linkInside) {
+            setOpen(false);
+            return;
+          }
+
+          // Cerrar al tocar fuera del UL (tap fuera)
+          // (si el menú ocupa toda pantalla, esto casi no aplica, pero no molesta)
+          if (!t.closest("ul.nav-menu-ul.nav-menu-desktop")) {
+            setOpen(false);
+            return;
+          }
+        }
+      },
+      true
+    );
+
+    // Escape para cerrar (teclado)
+    document.addEventListener("keydown", function (e) {
+      if (!isOpen()) return;
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    // Si el builder inyecta/reemplaza el UL, re-cerramos (extra seguro)
+    var mo = new MutationObserver(function () {
+      if (!matchesProblemDevices()) return;
+      // Si el menú está abierto “solo” sin clase, lo cerramos
+      if (!isOpen()) setOpen(false);
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+  });
+})();
