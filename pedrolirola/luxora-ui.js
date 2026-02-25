@@ -590,3 +590,71 @@
     bindTabletHamburgerState();
   });
 })();
+/* =======================================================
+   FIX: toggle class html.lx-menu-open según estado real del overlay
+   para ocultar hamburguesa cuando el menú está abierto
+======================================================= */
+(function () {
+  function getDesktopMenu() {
+    return document.querySelector("ul.nav-menu-ul.nav-menu-desktop");
+  }
+
+  function isMenuOpen(menuEl) {
+    if (!menuEl) return false;
+
+    // Si existe "hide-popup" lo consideramos cerrado (típico en GHL)
+    if (menuEl.classList.contains("hide-popup")) return false;
+
+    // Refuerzo: cuando está abierto lo forzamos a overlay (position fixed)
+    var cs = window.getComputedStyle(menuEl);
+    return cs && cs.position === "fixed" && cs.display !== "none" && cs.visibility !== "hidden";
+  }
+
+  function syncHtmlClass() {
+    var menuEl = getDesktopMenu();
+    var open = isMenuOpen(menuEl);
+    document.documentElement.classList.toggle("lx-menu-open", open);
+  }
+
+  // 1) Sync inicial
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncHtmlClass, { once: true });
+  } else {
+    syncHtmlClass();
+  }
+
+  // 2) Sync al redimensionar/orientación
+  window.addEventListener("resize", syncHtmlClass, { passive: true });
+  window.addEventListener("orientationchange", syncHtmlClass, { passive: true });
+
+  // 3) Observar cambios de clase en el UL (cuando abre/cierra)
+  var obs = new MutationObserver(function () {
+    syncHtmlClass();
+  });
+
+  function attachObserver() {
+    var menuEl = getDesktopMenu();
+    if (menuEl) {
+      obs.disconnect();
+      obs.observe(menuEl, { attributes: true, attributeFilter: ["class", "style"] });
+      syncHtmlClass();
+      return true;
+    }
+    return false;
+  }
+
+  // Intento inmediato + reintentos cortos por si el menú se monta tarde
+  if (!attachObserver()) {
+    var tries = 0;
+    var t = setInterval(function () {
+      tries++;
+      if (attachObserver() || tries > 40) clearInterval(t); // ~4s máx
+    }, 100);
+  }
+
+  // 4) Sync también tras cualquier click (por si el builder cambia estado sin mutar class)
+  document.addEventListener("click", function () {
+    // micro-delay para dejar que el handler original abra/cierre primero
+    setTimeout(syncHtmlClass, 0);
+  }, true);
+})();
