@@ -726,3 +726,27 @@
     pointer-events: none !important;
   }
 }
+@media screen and (max-width: 767px) {
+
+  ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    z-index: 1000000 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    background: var(--menu-overlay) !important;
+    backdrop-filter: blur(var(--menu-blur)) !important;
+
+    padding-top: var(--menu-pad-top) !important;
+    padding-left: var(--menu-pad-x) !important;
+    padding-right: var(--menu-pad-x) !important;
+    padding-bottom: var(--menu-pad-bottom) !important;
+
+    overflow-y: auto !important;
+  }
+
+}
