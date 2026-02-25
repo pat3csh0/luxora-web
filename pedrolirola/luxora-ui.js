@@ -605,3 +605,26 @@
   );
 })();
 
+/* =========================================================
+   FIX Surface Duo (481–767px)
+   - Evita que el sitio cargue con html.lx-menu-open activo en ese rango
+   ========================================================= */
+(function () {
+  function normalizeMenuState() {
+    try {
+      var mm = window.matchMedia("(min-width: 481px) and (max-width: 767px)");
+      if (mm.matches) {
+        document.documentElement.classList.remove("lx-menu-open");
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", normalizeMenuState, { once: true });
+  } else {
+    normalizeMenuState();
+  }
+
+  // Por si el navegador restaura estado al volver atrás/adelante
+  window.addEventListener("pageshow", normalizeMenuState);
+})();
