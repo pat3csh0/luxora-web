@@ -533,3 +533,29 @@
     updateUI();
   })();
 })();
+// --- Luxora: Force mobile hamburger on "tablet/intermediate" widths (768-1024) ---
+// This does NOT affect <768 (phones) and does NOT affect >1024 (desktop).
+(function () {
+  try {
+    const mq = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+
+    const apply = () => {
+      document.documentElement.classList.toggle("lx-nav-tablet", mq.matches);
+    };
+
+    // Initial
+    apply();
+
+    // Changes
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", apply);
+    } else if (typeof mq.addListener === "function") {
+      mq.addListener(apply); // Safari/old
+    }
+
+    window.addEventListener("orientationchange", apply);
+    window.addEventListener("resize", apply);
+  } catch (e) {
+    // no-op
+  }
+})();
