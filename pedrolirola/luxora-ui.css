@@ -476,220 +476,70 @@
   }
 }
 /* =========================================================
-   NAV MENU (GHL nav-menu-v2) — FIX QUIRÚRGICO
-   - Objetivo: que la hamburguesa EXISTENTE se vea y funcione
-     en resoluciones intermedias problemáticas, sin afectar desktop.
-   - NO crea iconos nuevos.
+   FIX DEFINITIVO NAV MENU (GHL nav-menu-v2) — TABLET + INTERMEDIOS
+   - Extiende el overlay de (max-width:767px) a tablets (<=1204px)
+   - Evita 2 X: NO transforma hamburguesa en X
+   - Arregla Surface Duo: fuerza visible el contenedor del toggle
    ========================================================= */
 
-/* A) MÓVIL REAL (481–767px incluido):
-      GHL a veces solo muestra .nav-menu-mobile hasta 480px.
-      Esto hace que en Surface Duo (540) “desaparezca”.
-*/
-@media screen and (max-width: 767px) {
+@media (max-width: 1204px) {
 
-  /* Fuerza a mostrar el botón hamburguesa existente */
-  [id^="nav-menu-v2-"] .nav-menu-mobile{
-    display: block !important;
+  /* 0) El contenedor donde vive el toggle a veces queda display:none */
+  [id^="nav-menu-v2-"] .nav-menu-ul.cart-search-mobile{
+    display: flex !important;
+    align-items: center !important;
   }
 
-  /* Garantiza que, cuando el menú esté cerrado, se oculte (GHL usa .hide-popup) */
+  /* 1) Asegura que el botón hamburguesa “exista” en este rango */
+  [id^="nav-menu-v2-"] .nav-menu-mobile{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 1000002 !important;
+  }
+
+  /* 2) Overlay fullscreen (mismo concepto que tu bloque móvil),
+        pero solo cuando el UL está ABIERTO (sin .hide-popup) */
   [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop.hide-popup{
     display: none !important;
   }
 
-  /* Cuando esté abierto (sin hide-popup), que se muestre sí o sí */
   [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup){
-    display: block !important;
-  }
-}
-
-/* B) TABLET / INTERMEDIO (iPad Pro 1024, Surface Pro 912, etc.)
-      Solo en dispositivos táctiles para NO romper desktop “normal”
-      si alguien reduce la ventana con ratón.
-*/
-@media screen and (min-width: 768px) and (max-width: 1100px) and (hover: none) and (pointer: coarse) {
-
-  /* 1) Mostrar hamburguesa existente */
-  [id^="nav-menu-v2-"] .nav-menu-mobile{
-    display: block !important;
-  }
-
-  /* 2) El UL que contiene links se comporta como overlay móvil (solo en este rango) */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop{
     position: fixed !important;
     inset: 0 !important;
     width: 100% !important;
     height: 100dvh !important;
     z-index: 1000000 !important;
-    background: var(--menu-overlay, rgba(0,0,0,.88)) !important;
-    -webkit-backdrop-filter: blur(var(--menu-blur, 6px)) !important;
-    backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+    background: var(--menu-overlay) !important;
+    -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
+    backdrop-filter: blur(var(--menu-blur)) !important;
     overflow-y: auto !important;
-    padding-top: var(--menu-pad-top, 110px) !important;
-    padding-left: var(--menu-pad-x, 18px) !important;
-    padding-right: var(--menu-pad-x, 18px) !important;
-    padding-bottom: var(--menu-pad-bottom, 40px) !important;
+    padding-top: var(--menu-pad-top) !important;
+    padding-left: var(--menu-pad-x) !important;
+    padding-right: var(--menu-pad-x) !important;
+    padding-bottom: var(--menu-pad-bottom) !important;
   }
 
-  /* 3) Cerrado = oculto (respeta el toggle de GHL) */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop.hide-popup{
-    display: none !important;
-  }
-
-  /* 4) Abierto = visible */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup){
-    display: block !important;
-  }
-
-  /* 5) Links blancos (solo dentro del overlay) */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop a,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop span,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop li{
+  /* 3) Blanco dentro del overlay */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup),
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) a,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) span,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) li{
     color: #fff !important;
   }
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop svg,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop i{
+
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) svg,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) i{
     color: #fff !important;
     fill: #fff !important;
   }
-}
 
-/* C) (Opcional pero útil) Elimina “hamburguesa duplicada” SOLO si alguna vez
-      quedó otra en el DOM. No afecta si solo hay una. */
-[id^="nav-menu-v2-"] .nav-menu-mobile + .nav-menu-mobile{
-  display: none !important;
-}
-/* =========================================================
-   FIX NAV v2: Mostrar hamburguesa en resoluciones intermedias
-   (iPad Air/Pro, Surface Pro/Duo, etc.) sin afectar móvil
-   ========================================================= */
-
-/* Tablets / widths intermedios: usar menú móvil y ocultar desktop */
-@media screen and (min-width: 481px) and (max-width: 1024px) {
-  /* El botón REAL de hamburguesa (no crear otro) */
-  [id^="nav-menu-v2-"] .nav-menu-mobile {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  /* Evita doble navegación: en este rango, ocultamos el desktop */
-  [id^="nav-menu-v2-"] .nav-menu-desktop,
-  [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop {
-    display: none !important;
-  }
-}
-/* --- Luxora: tablet/intermediate widths (768-1024) must show hamburger (mobile nav) --- */
-/* Only activates when JS adds .lx-nav-tablet on <html>. Phones keep their native behavior. */
-.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-mobile{
-  display: block !important;
-}
-
-/* Hide desktop menu only in that intermediate range so we don't get "no menu" */
-.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-desktop,
-.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop{
-  display: none !important;
-}
-
-/* Safety: ensure the hamburger is clickable (avoid being visually there but unclickable) */
-.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-mobile{
-  pointer-events: auto !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  position: relative;
-  z-index: 9999;
-}
-/* ---------------------------------------------------------
-   LUXORA FIX: Tablet / resoluciones intermedias
-   - Muestra 1 sola hamburguesa
-   - Oculta menú desktop
-   - No afecta a <768px (móvil) ni a >1100px (desktop)
---------------------------------------------------------- */
-@media (min-width: 768px) and (max-width: 1100px) {
-  /* Oculta el UL desktop */
-  [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop,
-  [id^="nav-menu-v2-"] ul.nav-menu-desktop {
-    display: none !important;
-  }
-
-  /* Asegura visible el contenedor "mobile" (donde vive el toggle) */
-  [id^="nav-menu-v2-"] .nav-menu-ul.cart-search-mobile {
-    display: flex !important;
-  }
-
-  /* Fuerza a mostrar el botón hamburguesa */
-  [id^="nav-menu-v2-"] .nav-menu-mobile {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    color: #fff !important; /* si tu header usa blanco, esto evita “invisible” */
-  }
-
-  /* Si el span viene vacío en estas resoluciones, dibujamos el icono */
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span {
-    display: block !important;
-    width: 28px;
-    height: 28px;
-    position: relative;
-  }
-
-  /* Hamburguesa (3 líneas) */
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span::before {
-    content: "";
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    top: 7px;
-    height: 2px;
-    background: currentColor;
-    box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
-  }
-
-  /* Cuando esté abierto: dibuja “X” (si aria-expanded cambia a true) */
-  [id^="nav-menu-v2-"] .nav-menu-mobile[aria-expanded="true"] > span::before {
-    top: 13px;
-    box-shadow: none;
-    transform: rotate(45deg);
-  }
-  [id^="nav-menu-v2-"] .nav-menu-mobile[aria-expanded="true"] > span::after {
-    content: "";
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    top: 13px;
-    height: 2px;
-    background: currentColor;
-    transform: rotate(-45deg);
-  }
-}
-/* =========================================================
-   NAV MENU v2 — FIX TABLET / INTERMEDIOS (quirúrgico)
-   - Arregla: "hay hamburguesa pero no hay X" en iPad/Surface
-   - NO afecta a desktop >1100px
-========================================================= */
-
-/* 1) Rango tablet / intermedio: forzar hamburguesa visible */
-@media (min-width: 768px) and (max-width: 1100px) {
-  [id^="nav-menu-v2-"] .nav-menu-mobile {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    position: relative !important;
-    z-index: 1000002 !important; /* por encima del header/hero */
-  }
-}
-
-/* 2) X / Cerrar: aplicar a CUALQUIER ul.nav-menu-ul (no solo .nav-menu-desktop) */
-@media (max-width: 1100px) {
-  /* El LI que contiene la X */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul > li.x-icon {
+  /* 4) X / Cerrar: aplica también en tablets/intermedios (antes solo <=767) */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon{
     display: block !important;
     position: fixed !important;
     top: 18px !important;
@@ -701,8 +551,7 @@
     height: auto !important;
   }
 
-  /* Wrapper clickable de la X */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul > li.x-icon > div {
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div{
     width: var(--menu-close-size) !important;
     height: var(--menu-close-size) !important;
     display: flex !important;
@@ -715,149 +564,21 @@
     line-height: 0 !important;
   }
 
-  /* Si hay wrapper interno extra */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul > li.x-icon > div > * {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    height: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    line-height: 0 !important;
-  }
-
-  /* El SVG de la X */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul > li.x-icon svg,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul > li.x-icon svg[aria-label="close"] {
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg{
     width: var(--menu-close-icon) !important;
     height: var(--menu-close-icon) !important;
     display: block !important;
     margin: 0 !important;
     padding: 0 !important;
     line-height: 0 !important;
-    position: relative !important;
-    left: 0 !important;
-    top: 0 !important;
     transform: none !important;
     fill: #fff !important;
     stroke: #fff !important;
   }
-}
-/* =========================================================
-   FIX TABLET: X (Cerrar) no visible en iPad/Surface Pro
-   Estructura: ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div > svg
-   ========================================================= */
 
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop > li.x-icon{
-  /* fuerzo que exista y sea clicable */
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  /* la saco del flujo del UL-overlay */
-  position: fixed !important;
-  top: 16px !important;
-  right: 16px !important;
-  left: auto !important;
-  bottom: auto !important;
-
-  /* por encima del blur/overlay */
-  z-index: 2147483647 !important;
-
-  /* evita que padding/line-height del UL la distorsione */
-  padding: 0 !important;
-  margin: 0 !important;
-  width: auto !important;
-  height: auto !important;
-
-  pointer-events: auto !important;
-}
-
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div{
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-
-  width: var(--menu-close-size, 48px) !important;
-  height: var(--menu-close-size, 48px) !important;
-
-  border-radius: 999px !important;
-  background: var(--menu-close-bg, rgba(255,255,255,.14)) !important;
-
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg{
-  display: block !important;
-  width: var(--menu-close-icon, 26px) !important;
-  height: var(--menu-close-icon, 26px) !important;
-
-  /* el SVG usa stroke="currentColor" */
-  color: #fff !important;
-  opacity: 1 !important;
-}
-/* =========================================================
-   Cuando el menú (overlay) está abierto: ocultar hamburguesa
-   y dejar SOLO la X.
-   ========================================================= */
-
-/* Si el UL overlay (nav-menu-desktop) está visible/en pantalla,
-   escondemos el botón hamburguesa. */
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop {
-  /* (esto solo es “selector ancla”; no cambia nada) */
-}
-
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ ul.nav-menu-ul.cart-search-mobile .nav-menu-mobile,
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ ul.nav-menu-ul.cart-search-mobile li:has(.nav-menu-mobile) {
-  display: none !important;
-}
-
-/* Fallback por si no existe el UL cart-search-mobile en algún layout:
-   ocultamos cualquier .nav-menu-mobile mientras el overlay está abierto */
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop[style*="display: block"],
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop {
-  /* cuando el overlay existe, escondemos el icono hamburguesa */
-}
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop li.x-icon{
-  /* aseguramos la X */
-  display: block !important;
-}
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop + * .nav-menu-mobile,
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ * .nav-menu-mobile{
-  display: none !important;
-}
-/* =========================================================
-   Overlay abierto => ocultar hamburguesa (para no ver 2 X)
-   Solo debe verse la X del overlay (la redonda de arriba)
-   ========================================================= */
-
-/* Cuando el UL del overlay está ABIERTO (sin hide-popup),
-   ocultamos el botón hamburguesa del UL mobile */
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup)
-  ~ ul.nav-menu-ul.cart-search-mobile .nav-menu-mobile {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* Extra: por si el LI contenedor sigue ocupando espacio/clic */
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup)
-  ~ ul.nav-menu-ul.cart-search-mobile li {
-  /* No tocamos todos los li, solo “blindamos” que no capture clics */
-}
-#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup)
-  ~ ul.nav-menu-ul.cart-search-mobile li .nav-menu-mobile {
-  display: none !important;
-}
-/* =======================================================
-   FIX: cuando el menú overlay está abierto -> ocultar hamburguesa
-   (deja visible SOLO la X del overlay)
-======================================================= */
-html.lx-menu-open .nav-menu-mobile{
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  /* 5) IMPORTANTÍSIMO: cuando el overlay está abierto, ocultar el botón hamburguesa.
+        (Esto elimina el “2 X”, sin tocar iconos) */
+  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-mobile{
+    display: none !important;
+  }
 }
