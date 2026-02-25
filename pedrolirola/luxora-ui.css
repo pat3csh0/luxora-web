@@ -829,3 +829,26 @@
 #nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ * .nav-menu-mobile{
   display: none !important;
 }
+/* =========================================================
+   Overlay abierto => ocultar hamburguesa (para no ver 2 X)
+   Solo debe verse la X del overlay (la redonda de arriba)
+   ========================================================= */
+
+/* Cuando el UL del overlay está ABIERTO (sin hide-popup),
+   ocultamos el botón hamburguesa del UL mobile */
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup)
+  ~ ul.nav-menu-ul.cart-search-mobile .nav-menu-mobile {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Extra: por si el LI contenedor sigue ocupando espacio/clic */
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup)
+  ~ ul.nav-menu-ul.cart-search-mobile li {
+  /* No tocamos todos los li, solo “blindamos” que no capture clics */
+}
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup)
+  ~ ul.nav-menu-ul.cart-search-mobile li .nav-menu-mobile {
+  display: none !important;
+}
