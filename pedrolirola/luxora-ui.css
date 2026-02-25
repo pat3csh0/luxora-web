@@ -602,3 +602,69 @@
   position: relative;
   z-index: 9999;
 }
+/* ---------------------------------------------------------
+   LUXORA FIX: Tablet / resoluciones intermedias
+   - Muestra 1 sola hamburguesa
+   - Oculta menú desktop
+   - No afecta a <768px (móvil) ni a >1100px (desktop)
+--------------------------------------------------------- */
+@media (min-width: 768px) and (max-width: 1100px) {
+  /* Oculta el UL desktop */
+  [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop,
+  [id^="nav-menu-v2-"] ul.nav-menu-desktop {
+    display: none !important;
+  }
+
+  /* Asegura visible el contenedor "mobile" (donde vive el toggle) */
+  [id^="nav-menu-v2-"] .nav-menu-ul.cart-search-mobile {
+    display: flex !important;
+  }
+
+  /* Fuerza a mostrar el botón hamburguesa */
+  [id^="nav-menu-v2-"] .nav-menu-mobile {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    color: #fff !important; /* si tu header usa blanco, esto evita “invisible” */
+  }
+
+  /* Si el span viene vacío en estas resoluciones, dibujamos el icono */
+  [id^="nav-menu-v2-"] .nav-menu-mobile > span {
+    display: block !important;
+    width: 28px;
+    height: 28px;
+    position: relative;
+  }
+
+  /* Hamburguesa (3 líneas) */
+  [id^="nav-menu-v2-"] .nav-menu-mobile > span::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 7px;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+  }
+
+  /* Cuando esté abierto: dibuja “X” (si aria-expanded cambia a true) */
+  [id^="nav-menu-v2-"] .nav-menu-mobile[aria-expanded="true"] > span::before {
+    top: 13px;
+    box-shadow: none;
+    transform: rotate(45deg);
+  }
+  [id^="nav-menu-v2-"] .nav-menu-mobile[aria-expanded="true"] > span::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 13px;
+    height: 2px;
+    background: currentColor;
+    transform: rotate(-45deg);
+  }
+}
