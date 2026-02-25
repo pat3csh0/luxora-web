@@ -604,3 +604,35 @@
     true
   );
 })();
+
+
+
+/* =======================================================
+   FIX Surface Duo (phablet 480–767px):
+   - Evita que la página cargue con html.lx-menu-open activo
+   - No afecta a iPhone (<480px)
+======================================================= */
+(function () {
+  function closeMenuOnLoadForPhablets() {
+    const w = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (w < 480 || w > 767) return;
+
+    // Cerrar menú si llega abierto
+    document.documentElement.classList.remove("lx-menu-open");
+
+    // Blindaje extra: aria-expanded
+    document
+      .querySelectorAll('[aria-label="Toggle menu"], .nav-menu-mobile')
+      .forEach((el) => {
+        if (el.getAttribute("aria-expanded") === "true") {
+          el.setAttribute("aria-expanded", "false");
+        }
+      });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", closeMenuOnLoadForPhablets, { once: true });
+  } else {
+    closeMenuOnLoadForPhablets();
+  }
+})();
