@@ -807,3 +807,101 @@
     anchor.appendChild(btn);
   });
 })();
+
+
+/* =========================================================
+   LX PROBLEM NAV (robusto)
+   - Detecta por screen.width/screen.height con tolerancia
+   - Añade html.lx-problem-nav
+   - Inyecta botón fijo y controla body.lx-nav-open
+   ========================================================= */
+(function () {
+  function approx(a, b, tol) { return Math.abs(a - b) <= tol; }
+
+  function isProblemDevice() {
+    var w = window.screen && window.screen.width ? window.screen.width : 0;
+    var h = window.screen && window.screen.height ? window.screen.height : 0;
+    var tol = 2;
+
+    // Combos problemáticos (portrait)
+    var duo = approx(w, 540, tol) && approx(h, 720, tol);
+    var sp7 = approx(w, 912, tol) && approx(h, 1368, tol);
+    var ipad = approx(w, 1024, tol) && approx(h, 1366, tol);
+
+    // Por si el emulador invierte valores
+    var duoSwap = approx(w, 720, tol) && approx(h, 540, tol);
+    var sp7Swap = approx(w, 1368, tol) && approx(h, 912, tol);
+    var ipadSwap = approx(w, 1366, tol) && approx(h, 1024, tol);
+
+    return duo || sp7 || ipad || duoSwap || sp7Swap || ipadSwap;
+  }
+
+  function ready(fn) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  ready(function () {
+    if (!isProblemDevice()) return;
+
+    // Activa CSS SOLO en estos dispositivos
+    document.documentElement.classList.add("lx-problem-nav");
+
+    // Si no existe el menú desktop, no podemos abrir overlay
+    var desktopUL = document.querySelector("ul.nav-menu-ul.nav-menu-desktop");
+    if (!desktopUL) return;
+
+    function setOpen(v) { document.body.classList.toggle("lx-nav-open", !!v); }
+    function isOpen() { return document.body.classList.contains("lx-nav-open"); }
+
+    // Evita “abierto solo”
+    setOpen(false);
+
+    // Si ya existe el botón, no duplicar
+    if (document.querySelector(".lx-burger-btn")) return;
+
+    // Crear botón fijo
+    var btn = document.createElement("div");
+    btn.className = "lx-burger-btn";
+    btn.setAttribute("role", "button");
+    btn.setAttribute("tabindex", "0");
+    btn.setAttribute("aria-label", "Toggle menu");
+    btn.innerHTML = "<span></span>";
+
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(!isOpen());
+    });
+
+    btn.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(!isOpen());
+      }
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    document.body.appendChild(btn);
+
+    // Cerrar con X y al clicar enlaces del menú
+    document.addEventListener("click", function (e) {
+      if (!isOpen()) return;
+      var t = e.target;
+
+      if (t.closest && t.closest("li.x-icon")) {
+        setOpen(false);
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      var linkInside = t.closest && t.closest("ul.nav-menu-ul.nav-menu-desktop a");
+      if (linkInside) setOpen(false);
+    }, true);
+
+    document.addEventListener("keydown", function (e) {
+      if (isOpen() && e.key === "Escape") setOpen(false);
+    });
+  });
+})();
