@@ -646,3 +646,48 @@
     width: 100% !important;
   }
 }
+/* =========================================================
+   FIX: Mostrar hamburguesa en Surface Duo (481–767px)
+   El contenedor .cart-search-mobile está viniendo con display:none
+   ========================================================= */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+
+  /* 1) Forzar que el contenedor donde vive la hamburguesa NO esté oculto */
+  [id^="nav-menu-v2-"] .cart-search-mobile {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+
+  /* 2) Forzar que el "botón" hamburguesa sea visible y clicable */
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+
+    min-width: var(--menu-close-size, 48px) !important;
+    min-height: var(--menu-close-size, 48px) !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    position: relative !important;
+    z-index: 1000002 !important;
+  }
+
+  /* 3) Si el icono es un SVG o similar, asegúrate de que tenga tamaño */
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile svg,
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile img {
+    width: var(--menu-close-icon, 26px) !important;
+    height: var(--menu-close-icon, 26px) !important;
+    display: block !important;
+  }
+
+  /* 4) Si la hamburguesa es un carácter (≡) dentro de un span/div */
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile span,
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile div {
+    font-size: 28px !important;
+    line-height: 1 !important;
+  }
+}
