@@ -559,3 +559,34 @@
     // no-op
   }
 })();
+(function () {
+  const inTabletRange = () => window.innerWidth >= 768 && window.innerWidth <= 1100;
+
+  function bindTabletHamburgerState() {
+    if (!inTabletRange()) return;
+
+    document
+      .querySelectorAll('[id^="nav-menu-v2-"] .nav-menu-mobile[role="button"]')
+      .forEach((btn) => {
+        // Evita duplicar listeners si recargas/rehidratas
+        if (btn.dataset.lxBound === "1") return;
+        btn.dataset.lxBound = "1";
+
+        // Estado inicial
+        if (!btn.hasAttribute("aria-expanded")) btn.setAttribute("aria-expanded", "false");
+
+        btn.addEventListener("click", () => {
+          // Solo marca estado visual; el abrir/cerrar real lo gestiona el menú nativo
+          const current = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", current ? "false" : "true");
+        });
+      });
+  }
+
+  // DOM ready + resize (por si cambias device en DevTools)
+  window.addEventListener("DOMContentLoaded", bindTabletHamburgerState);
+  window.addEventListener("resize", () => {
+    // Re-bindea al entrar en rango tablet
+    bindTabletHamburgerState();
+  });
+})();
