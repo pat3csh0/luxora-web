@@ -691,3 +691,38 @@
     line-height: 1 !important;
   }
 }
+/* FIX: Surface Duo / rango conflictivo (481–767)
+   El icono hamburguesa no aparece porque el CSS lo dibuja sobre un <span>.
+   Aquí lo dibujamos sobre el propio .nav-menu-mobile (quirúrgico). */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+
+  /* Asegura que el botón existe y es clicable */
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    min-width: var(--menu-close-size, 48px) !important;
+    min-height: var(--menu-close-size, 48px) !important;
+  }
+
+  /* Evita depender del span (en Duo a veces no pinta) */
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile span{
+    display: none !important;
+  }
+
+  /* Dibuja el icono hamburguesa en el propio botón */
+  [id^="nav-menu-v2-"] .cart-search-mobile .nav-menu-mobile::before{
+    content: "" !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 22px !important;
+    height: 2px !important;
+    background: #fff !important;
+    box-shadow: 0 -7px 0 #fff, 0 7px 0 #fff !important;
+    border-radius: 2px !important;
+    pointer-events: none !important;
+  }
+}
