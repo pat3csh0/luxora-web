@@ -561,3 +561,24 @@
 [id^="nav-menu-v2-"] .nav-menu-mobile + .nav-menu-mobile{
   display: none !important;
 }
+/* =========================================================
+   FIX NAV v2: Mostrar hamburguesa en resoluciones intermedias
+   (iPad Air/Pro, Surface Pro/Duo, etc.) sin afectar móvil
+   ========================================================= */
+
+/* Tablets / widths intermedios: usar menú móvil y ocultar desktop */
+@media screen and (min-width: 481px) and (max-width: 1024px) {
+  /* El botón REAL de hamburguesa (no crear otro) */
+  [id^="nav-menu-v2-"] .nav-menu-mobile {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Evita doble navegación: en este rango, ocultamos el desktop */
+  [id^="nav-menu-v2-"] .nav-menu-desktop,
+  [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop {
+    display: none !important;
+  }
+}
