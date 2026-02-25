@@ -570,3 +570,79 @@
     z-index: 1000003 !important;
   }
 }
+/* =========================================================
+   FIX Surface Duo (y tablets estrechas 481–767px)
+   - Evita que el overlay del menú "desktop" esté abierto por defecto
+   - Fuerza menú en vertical cuando se abre
+   - Asegura tamaño táctil del botón hamburguesa
+   ========================================================= */
+
+@media screen and (min-width: 481px) and (max-width: 767px) {
+
+  /* 1) Asegura que el botón hamburguesa exista y tenga tamaño clicable */
+  [id^="nav-menu-v2-"] .nav-menu-mobile,
+  [id^="nav-menu-v2-"] .nav-menu-mobile * {
+    pointer-events: auto !important;
+  }
+
+  [id^="nav-menu-v2-"] .nav-menu-mobile {
+    display: block !important;
+    min-width: var(--menu-close-size, 48px) !important;
+    min-height: var(--menu-close-size, 48px) !important;
+  }
+
+  /* Si el icono es un div/botón interno, también lo agrandamos */
+  [id^="nav-menu-v2-"] .nav-menu-mobile button,
+  [id^="nav-menu-v2-"] .nav-menu-mobile a,
+  [id^="nav-menu-v2-"] .nav-menu-mobile div {
+    min-width: var(--menu-close-size, 48px) !important;
+    min-height: var(--menu-close-size, 48px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 2) Por defecto: el UL "desktop" NO debe ser overlay visible */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop {
+    display: none !important;
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  /* 3) Solo cuando el menú está abierto (html.lx-menu-open):
+        mostramos el overlay y lo ponemos en VERTICAL */
+  html.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop {
+    display: flex !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    z-index: 1000000 !important;
+
+    background: var(--menu-overlay, rgba(0,0,0,.88)) !important;
+    backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+
+    overflow-y: auto !important;
+    padding-top: var(--menu-pad-top, 110px) !important;
+    padding-left: var(--menu-pad-x, 18px) !important;
+    padding-right: var(--menu-pad-x, 18px) !important;
+    padding-bottom: var(--menu-pad-bottom, 40px) !important;
+
+    /* CLAVE: vertical */
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+  }
+
+  /* 4) Asegura que los LI se comporten como filas */
+  html.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li {
+    width: 100% !important;
+  }
+}
