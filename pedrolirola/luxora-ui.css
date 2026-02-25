@@ -475,3 +475,89 @@
     color:#fff !important;
   }
 }
+/* =========================================================
+   NAV MENU (GHL nav-menu-v2) — FIX QUIRÚRGICO
+   - Objetivo: que la hamburguesa EXISTENTE se vea y funcione
+     en resoluciones intermedias problemáticas, sin afectar desktop.
+   - NO crea iconos nuevos.
+   ========================================================= */
+
+/* A) MÓVIL REAL (481–767px incluido):
+      GHL a veces solo muestra .nav-menu-mobile hasta 480px.
+      Esto hace que en Surface Duo (540) “desaparezca”.
+*/
+@media screen and (max-width: 767px) {
+
+  /* Fuerza a mostrar el botón hamburguesa existente */
+  [id^="nav-menu-v2-"] .nav-menu-mobile{
+    display: block !important;
+  }
+
+  /* Garantiza que, cuando el menú esté cerrado, se oculte (GHL usa .hide-popup) */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop.hide-popup{
+    display: none !important;
+  }
+
+  /* Cuando esté abierto (sin hide-popup), que se muestre sí o sí */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup){
+    display: block !important;
+  }
+}
+
+/* B) TABLET / INTERMEDIO (iPad Pro 1024, Surface Pro 912, etc.)
+      Solo en dispositivos táctiles para NO romper desktop “normal”
+      si alguien reduce la ventana con ratón.
+*/
+@media screen and (min-width: 768px) and (max-width: 1100px) and (hover: none) and (pointer: coarse) {
+
+  /* 1) Mostrar hamburguesa existente */
+  [id^="nav-menu-v2-"] .nav-menu-mobile{
+    display: block !important;
+  }
+
+  /* 2) El UL que contiene links se comporta como overlay móvil (solo en este rango) */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop{
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    z-index: 1000000 !important;
+    background: var(--menu-overlay, rgba(0,0,0,.88)) !important;
+    -webkit-backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+    backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+    overflow-y: auto !important;
+    padding-top: var(--menu-pad-top, 110px) !important;
+    padding-left: var(--menu-pad-x, 18px) !important;
+    padding-right: var(--menu-pad-x, 18px) !important;
+    padding-bottom: var(--menu-pad-bottom, 40px) !important;
+  }
+
+  /* 3) Cerrado = oculto (respeta el toggle de GHL) */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop.hide-popup{
+    display: none !important;
+  }
+
+  /* 4) Abierto = visible */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup){
+    display: block !important;
+  }
+
+  /* 5) Links blancos (solo dentro del overlay) */
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop a,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop span,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop li{
+    color: #fff !important;
+  }
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop svg,
+  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop i{
+    color: #fff !important;
+    fill: #fff !important;
+  }
+}
+
+/* C) (Opcional pero útil) Elimina “hamburguesa duplicada” SOLO si alguna vez
+      quedó otra en el DOM. No afecta si solo hay una. */
+[id^="nav-menu-v2-"] .nav-menu-mobile + .nav-menu-mobile{
+  display: none !important;
+}
