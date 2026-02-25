@@ -852,3 +852,12 @@
   ~ ul.nav-menu-ul.cart-search-mobile li .nav-menu-mobile {
   display: none !important;
 }
+/* =======================================================
+   FIX: cuando el menú overlay está abierto -> ocultar hamburguesa
+   (deja visible SOLO la X del overlay)
+======================================================= */
+html.lx-menu-open .nav-menu-mobile{
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
