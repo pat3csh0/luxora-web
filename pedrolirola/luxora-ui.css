@@ -582,3 +582,23 @@
     display: none !important;
   }
 }
+/* --- Luxora: tablet/intermediate widths (768-1024) must show hamburger (mobile nav) --- */
+/* Only activates when JS adds .lx-nav-tablet on <html>. Phones keep their native behavior. */
+.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-mobile{
+  display: block !important;
+}
+
+/* Hide desktop menu only in that intermediate range so we don't get "no menu" */
+.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-desktop,
+.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop{
+  display: none !important;
+}
+
+/* Safety: ensure the hamburger is clickable (avoid being visually there but unclickable) */
+.lx-nav-tablet [id^="nav-menu-v2-"] .nav-menu-mobile{
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative;
+  z-index: 9999;
+}
