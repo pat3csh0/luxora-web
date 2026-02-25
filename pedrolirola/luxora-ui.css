@@ -700,3 +700,60 @@
     background: rgba(255,255,255,.14) !important;
   }
 }
+
+/* =========================================================
+   LX PROBLEM NAV (robusto): activado SOLO cuando JS añade:
+   html.lx-problem-nav
+   ========================================================= */
+
+/* Botón hamburguesa inyectado (SIEMPRE visible en esos devices) */
+html.lx-problem-nav .lx-burger-btn{
+  position: fixed !important;
+  top: 18px !important;
+  right: 18px !important;
+  z-index: 2147483647 !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 10px !important;
+  background: rgba(0,0,0,.28) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  backdrop-filter: blur(6px) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  pointer-events: auto !important;
+}
+
+/* 3 líneas */
+html.lx-problem-nav .lx-burger-btn span{
+  position: relative !important;
+  display: block !important;
+  width: 22px !important;
+  height: 2px !important;
+  background: #fff !important;
+  border-radius: 2px !important;
+}
+html.lx-problem-nav .lx-burger-btn span::before,
+html.lx-problem-nav .lx-burger-btn span::after{
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  width: 22px !important;
+  height: 2px !important;
+  background: #fff !important;
+  border-radius: 2px !important;
+}
+html.lx-problem-nav .lx-burger-btn span::before{ top: -7px !important; }
+html.lx-problem-nav .lx-burger-btn span::after{ top: 7px !important; }
+
+/* Menú overlay: cerrado por defecto (solo abre con body.lx-nav-open) */
+html.lx-problem-nav body:not(.lx-nav-open) ul.nav-menu-ul.nav-menu-desktop{
+  display: none !important;
+}
+
+/* Overlay abierto (usa tu estilo actual si ya lo tienes; esto solo asegura visibilidad) */
+html.lx-problem-nav body.lx-nav-open ul.nav-menu-ul.nav-menu-desktop{
+  display: block !important;
+}
