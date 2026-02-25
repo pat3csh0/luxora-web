@@ -533,79 +533,23 @@
     updateUI();
   })();
 })();
-// --- Luxora: Force mobile hamburger on "tablet/intermediate" widths (768-1024) ---
-// This does NOT affect <768 (phones) and does NOT affect >1024 (desktop).
-(function () {
-  try {
-    const mq = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
-
-    const apply = () => {
-      document.documentElement.classList.toggle("lx-nav-tablet", mq.matches);
-    };
-
-    // Initial
-    apply();
-
-    // Changes
-    if (typeof mq.addEventListener === "function") {
-      mq.addEventListener("change", apply);
-    } else if (typeof mq.addListener === "function") {
-      mq.addListener(apply); // Safari/old
-    }
-
-    window.addEventListener("orientationchange", apply);
-    window.addEventListener("resize", apply);
-  } catch (e) {
-    // no-op
-  }
-})();
-(function () {
-  const inTabletRange = () => window.innerWidth >= 768 && window.innerWidth <= 1100;
-
-  function bindTabletHamburgerState() {
-    if (!inTabletRange()) return;
-
-    document
-      .querySelectorAll('[id^="nav-menu-v2-"] .nav-menu-mobile[role="button"]')
-      .forEach((btn) => {
-        // Evita duplicar listeners si recargas/rehidratas
-        if (btn.dataset.lxBound === "1") return;
-        btn.dataset.lxBound = "1";
-
-        // Estado inicial
-        if (!btn.hasAttribute("aria-expanded")) btn.setAttribute("aria-expanded", "false");
-
-        btn.addEventListener("click", () => {
-          // Solo marca estado visual; el abrir/cerrar real lo gestiona el menú nativo
-          const current = btn.getAttribute("aria-expanded") === "true";
-          btn.setAttribute("aria-expanded", current ? "false" : "true");
-        });
-      });
-  }
-
-  // DOM ready + resize (por si cambias device en DevTools)
-  window.addEventListener("DOMContentLoaded", bindTabletHamburgerState);
-  window.addEventListener("resize", () => {
-    // Re-bindea al entrar en rango tablet
-    bindTabletHamburgerState();
-  });
-})();
 /* =======================================================
-   FIX: toggle class html.lx-menu-open según estado real del overlay
-   para ocultar hamburguesa cuando el menú está abierto
+   FIX: html.lx-menu-open según estado real del overlay (GHL nav-menu-v2)
+   - Permite ocultar la hamburguesa cuando el menú está abierto
+   - Evita depender de aria-expanded (que a veces no cambia en tablets)
 ======================================================= */
 (function () {
   function getDesktopMenu() {
-    return document.querySelector("ul.nav-menu-ul.nav-menu-desktop");
+    return document.querySelector('ul.nav-menu-ul.nav-menu-desktop');
   }
 
   function isMenuOpen(menuEl) {
     if (!menuEl) return false;
 
-    // Si existe "hide-popup" lo consideramos cerrado (típico en GHL)
+    // Cerrado típico en GHL
     if (menuEl.classList.contains("hide-popup")) return false;
 
-    // Refuerzo: cuando está abierto lo forzamos a overlay (position fixed)
+    // Abierto real: overlay forzado (position fixed) y visible
     var cs = window.getComputedStyle(menuEl);
     return cs && cs.position === "fixed" && cs.display !== "none" && cs.visibility !== "hidden";
   }
@@ -616,18 +560,18 @@
     document.documentElement.classList.toggle("lx-menu-open", open);
   }
 
-  // 1) Sync inicial
+  // Sync inicial
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", syncHtmlClass, { once: true });
   } else {
     syncHtmlClass();
   }
 
-  // 2) Sync al redimensionar/orientación
+  // Sync por cambios comunes
   window.addEventListener("resize", syncHtmlClass, { passive: true });
   window.addEventListener("orientationchange", syncHtmlClass, { passive: true });
 
-  // 3) Observar cambios de clase en el UL (cuando abre/cierra)
+  // Observar cambios del UL (class/style) cuando abre/cierra
   var obs = new MutationObserver(function () {
     syncHtmlClass();
   });
@@ -643,18 +587,20 @@
     return false;
   }
 
-  // Intento inmediato + reintentos cortos por si el menú se monta tarde
   if (!attachObserver()) {
     var tries = 0;
     var t = setInterval(function () {
       tries++;
-      if (attachObserver() || tries > 40) clearInterval(t); // ~4s máx
+      if (attachObserver() || tries > 40) clearInterval(t);
     }, 100);
   }
 
-  // 4) Sync también tras cualquier click (por si el builder cambia estado sin mutar class)
-  document.addEventListener("click", function () {
-    // micro-delay para dejar que el handler original abra/cierre primero
-    setTimeout(syncHtmlClass, 0);
-  }, true);
+  // Captura de clicks para sincronizar tras el handler nativo
+  document.addEventListener(
+    "click",
+    function () {
+      setTimeout(syncHtmlClass, 0);
+    },
+    true
+  );
 })();
