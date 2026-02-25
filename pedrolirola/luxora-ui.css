@@ -799,3 +799,33 @@
   color: #fff !important;
   opacity: 1 !important;
 }
+/* =========================================================
+   Cuando el menú (overlay) está abierto: ocultar hamburguesa
+   y dejar SOLO la X.
+   ========================================================= */
+
+/* Si el UL overlay (nav-menu-desktop) está visible/en pantalla,
+   escondemos el botón hamburguesa. */
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop {
+  /* (esto solo es “selector ancla”; no cambia nada) */
+}
+
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ ul.nav-menu-ul.cart-search-mobile .nav-menu-mobile,
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ ul.nav-menu-ul.cart-search-mobile li:has(.nav-menu-mobile) {
+  display: none !important;
+}
+
+/* Fallback por si no existe el UL cart-search-mobile en algún layout:
+   ocultamos cualquier .nav-menu-mobile mientras el overlay está abierto */
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop[style*="display: block"],
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop {
+  /* cuando el overlay existe, escondemos el icono hamburguesa */
+}
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop li.x-icon{
+  /* aseguramos la X */
+  display: block !important;
+}
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop + * .nav-menu-mobile,
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop ~ * .nav-menu-mobile{
+  display: none !important;
+}
