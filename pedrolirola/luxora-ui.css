@@ -744,3 +744,58 @@
     stroke: #fff !important;
   }
 }
+/* =========================================================
+   FIX TABLET: X (Cerrar) no visible en iPad/Surface Pro
+   Estructura: ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div > svg
+   ========================================================= */
+
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop > li.x-icon{
+  /* fuerzo que exista y sea clicable */
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  /* la saco del flujo del UL-overlay */
+  position: fixed !important;
+  top: 16px !important;
+  right: 16px !important;
+  left: auto !important;
+  bottom: auto !important;
+
+  /* por encima del blur/overlay */
+  z-index: 2147483647 !important;
+
+  /* evita que padding/line-height del UL la distorsione */
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+
+  pointer-events: auto !important;
+}
+
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  width: var(--menu-close-size, 48px) !important;
+  height: var(--menu-close-size, 48px) !important;
+
+  border-radius: 999px !important;
+  background: var(--menu-close-bg, rgba(255,255,255,.14)) !important;
+
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+#nav-menu-v2-GTE7hVJitf ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg{
+  display: block !important;
+  width: var(--menu-close-icon, 26px) !important;
+  height: var(--menu-close-icon, 26px) !important;
+
+  /* el SVG usa stroke="currentColor" */
+  color: #fff !important;
+  opacity: 1 !important;
+}
