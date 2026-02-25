@@ -570,3 +570,42 @@
     z-index: 1000003 !important;
   }
 }
+
+
+
+/* =======================================================
+   FIX Surface Duo / phablets (480–767px)
+   - Aumenta el área clicable del botón (sin tocar iPhone)
+   - Fuerza menú abierto en vertical (cuando exista lx-menu-open)
+======================================================= */
+
+/* Botón hamburguesa: tamaño y área clicable */
+@media (min-width: 480px) and (max-width: 767px) {
+  [id^="nav-menu-v2-"] .nav-menu-mobile {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    /* área clicable tipo “botón” */
+    min-width: var(--menu-close-size, 48px) !important;
+    min-height: var(--menu-close-size, 48px) !important;
+  }
+
+  /* icono dentro (span) */
+  [id^="nav-menu-v2-"] .nav-menu-mobile > span {
+    width: var(--menu-close-icon, 26px) !important;
+    height: var(--menu-close-icon, 26px) !important;
+  }
+}
+
+/* Menú abierto: SIEMPRE en vertical */
+@media (max-width: 767px) {
+  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop > li {
+    width: 100% !important;
+  }
+}
