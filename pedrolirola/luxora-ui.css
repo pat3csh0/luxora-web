@@ -476,196 +476,97 @@
   }
 }
 /* =========================================================
-   FIX DEFINITIVO NAV MENU (GHL nav-menu-v2) — TABLET + INTERMEDIOS
-   - Extiende el overlay de (max-width:767px) a tablets (<=1204px)
-   - Evita 2 X: NO transforma hamburguesa en X
-   - Arregla Surface Duo: fuerza visible el contenedor del toggle
-   ========================================================= */
+   FIX TABLET MENU (iPad / Surface Pro / Surface Duo, etc.)
+   Solo 768–1204px: agranda hamburguesa y fuerza menú overlay vertical
+   NO afecta móviles (<768) ni desktop grandes.
+========================================================= */
+@media screen and (min-width: 768px) and (max-width: 1204px) {
 
-@media (max-width: 1204px) {
-
-  /* 0) El contenedor donde vive el toggle a veces queda display:none */
-  [id^="nav-menu-v2-"] .nav-menu-ul.cart-search-mobile{
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  /* 1) Asegura que el botón hamburguesa “exista” en este rango */
-  [id^="nav-menu-v2-"] .nav-menu-mobile{
+  /* 1) Botón hamburguesa: área clicable y tamaño consistente */
+  [id^="nav-menu-v2-"] [aria-label="Toggle menu"]{
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
+    min-width: var(--menu-close-size, 48px) !important;
+    min-height: var(--menu-close-size, 48px) !important;
+    padding: 0 !important;
     position: relative !important;
     z-index: 1000002 !important;
+    cursor: pointer !important;
   }
 
-  /* 2) Overlay fullscreen (mismo concepto que tu bloque móvil),
-        pero solo cuando el UL está ABIERTO (sin .hide-popup) */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop.hide-popup{
-    display: none !important;
-  }
-
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup){
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100dvh !important;
-    z-index: 1000000 !important;
-    background: var(--menu-overlay) !important;
-    -webkit-backdrop-filter: blur(var(--menu-blur)) !important;
-    backdrop-filter: blur(var(--menu-blur)) !important;
-    overflow-y: auto !important;
-    padding-top: var(--menu-pad-top) !important;
-    padding-left: var(--menu-pad-x) !important;
-    padding-right: var(--menu-pad-x) !important;
-    padding-bottom: var(--menu-pad-bottom) !important;
-  }
-
-  /* 3) Blanco dentro del overlay */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup),
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) a,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) span,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) li{
-    color: #fff !important;
-  }
-
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) svg,
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop:not(.hide-popup) i{
-    color: #fff !important;
-    fill: #fff !important;
-  }
-
-  /* 4) X / Cerrar: aplica también en tablets/intermedios (antes solo <=767) */
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon{
+  /* El span interno (donde se dibuja el icono) */
+  [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span{
     display: block !important;
-    position: fixed !important;
-    top: 18px !important;
-    right: 18px !important;
-    z-index: 1000003 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: auto !important;
-    height: auto !important;
-  }
-
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon > div{
-    width: var(--menu-close-size) !important;
-    height: var(--menu-close-size) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 999px !important;
-    background: var(--menu-close-bg) !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    line-height: 0 !important;
-  }
-
-  [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon svg{
-    width: var(--menu-close-icon) !important;
-    height: var(--menu-close-icon) !important;
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 0 !important;
-    transform: none !important;
-    fill: #fff !important;
-    stroke: #fff !important;
-  }
-
-  /* 5) IMPORTANTÍSIMO: cuando el overlay está abierto, ocultar el botón hamburguesa.
-        (Esto elimina el “2 X”, sin tocar iconos) */
-  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-mobile{
-    display: none !important;
-  }
-}
-/* =========================================================
-   FIX TABLET / FOLDABLE (iPad Pro/Air, Surface Duo, etc.)
-   - Mantener comportamiento de menú "móvil" hasta 1204px
-   - Botón hamburguesa con tamaño correcto
-   - Menú abierto en VERTICAL (columna)
-   ========================================================= */
-@media (max-width: 1204px) {
-
-  /* 1) En este rango, ocultamos el UL de escritorio en estado normal */
-  [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop {
-    display: none !important;
-  }
-
-  /* 2) Mostramos el bloque "mobile/cart-search" donde vive el botón */
-  [id^="nav-menu-v2-"] .nav-menu-ul.cart-search-mobile {
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  /* 3) Asegurar tamaño del botón hamburguesa (evitar que se “micro-colapse”) */
-  [id^="nav-menu-v2-"] .nav-menu-mobile {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    min-width: var(--menu-close-size) !important;
-    min-height: var(--menu-close-size) !important;
-  }
-
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span {
-    display: block !important;
-    width: var(--menu-close-icon) !important;
-    height: var(--menu-close-icon) !important;
+    width: 28px !important;
+    height: 28px !important;
     position: relative !important;
   }
 
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span::before,
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span::after {
+  /* Dibuja 2 líneas (hamburguesa) por defecto */
+  [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::before,
+  [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::after{
     content: "" !important;
     position: absolute !important;
-    left: 0 !important;
-    width: var(--menu-close-icon) !important;
+    left: 3px !important;
+    right: 3px !important;
     height: 2px !important;
     background: #fff !important;
-    border-radius: 2px !important;
+    opacity: 1 !important;
+    transform-origin: center !important;
+  }
+  [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::before{ top: 9px !important; }
+  [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::after{  top: 17px !important; }
+
+  /* 2) Cuando el menú está abierto (lx-menu-open), el botón se convierte en X */
+  html.lx-menu-open [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::before,
+  body.lx-menu-open [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::before{
+    top: 13px !important;
+    transform: rotate(45deg) !important;
+  }
+  html.lx-menu-open [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::after,
+  body.lx-menu-open [id^="nav-menu-v2-"] [aria-label="Toggle menu"] > span::after{
+    top: 13px !important;
+    transform: rotate(-45deg) !important;
   }
 
-  /* líneas arriba/abajo centradas */
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span::before {
-    top: calc((var(--menu-close-icon) / 2) - 5px) !important;
-  }
-  [id^="nav-menu-v2-"] .nav-menu-mobile > span::after {
-    top: calc((var(--menu-close-icon) / 2) + 5px) !important;
-  }
+  /* 3) Menú abierto en TABLET: forzar overlay vertical como en móvil */
+  html.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop,
+  body.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop{
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1000001 !important;
+    background: var(--menu-overlay, rgba(0,0,0,.88)) !important;
+    -webkit-backdrop-filter: blur(var(--menu-blur, 6px)) !important;
+    backdrop-filter: blur(var(--menu-blur, 6px)) !important;
 
-  /* 4) Estado ABIERTO: el UL de escritorio se convierte en overlay VERTICAL */
-  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop {
+    /* IMPORTANTÍSIMO: vertical, no horizontal */
     display: flex !important;
     flex-direction: column !important;
-    gap: 16px !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
 
+    padding-top: var(--menu-pad-top, 110px) !important;
+    padding-left: var(--menu-pad-x, 18px) !important;
+    padding-right: var(--menu-pad-x, 18px) !important;
+    padding-bottom: var(--menu-pad-bottom, 40px) !important;
+
+    gap: 18px !important;
+  }
+
+  /* Cada item ocupa toda la línea (sensación móvil) */
+  html.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li,
+  body.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li{
+    width: 100% !important;
+  }
+
+  /* 4) Si existe el li.x-icon (la X original), se mantiene arriba a la derecha */
+  html.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon,
+  body.lx-menu-open [id^="nav-menu-v2-"] ul.nav-menu-ul.nav-menu-desktop > li.x-icon{
     position: fixed !important;
-    top: var(--menu-pad-top) !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-
-    padding: 0 var(--menu-pad-x) var(--menu-pad-bottom) !important;
-    z-index: 1000000 !important;
-  }
-
-  /* cada item a 100% para evitar que “se ponga en fila” */
-  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop > li {
-    width: 100% !important;
-  }
-  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-ul.nav-menu-desktop a {
-    display: block !important;
-    width: 100% !important;
-  }
-
-  /* 5) Cuando está abierto: ocultamos el botón hamburguesa para que NO interfiera */
-  html.lx-menu-open [id^="nav-menu-v2-"] .nav-menu-ul.cart-search-mobile {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
+    top: 16px !important;
+    right: 16px !important;
+    width: auto !important;
+    z-index: 1000003 !important;
   }
 }
